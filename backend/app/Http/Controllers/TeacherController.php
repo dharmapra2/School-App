@@ -35,7 +35,8 @@ class TeacherController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        
+        return response()->json($request,200);
     }
 
     /**

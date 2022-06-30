@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PrincipalController;
+use App\Http\Controllers\TeacherController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -19,3 +21,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('getPrincipal', [PrincipalController::class,'index']);
+Route::post('storeTeacher', [TeacherController::class,'store']);

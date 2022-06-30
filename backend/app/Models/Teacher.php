@@ -16,7 +16,7 @@ class Teacher extends Model
         'teach_qualification',
         'teach_contact',
         'teach_address',
-        'teach_city'
+        'teach_city', 'prin_id'
     ];
     public function principal()
     {

@@ -19,6 +19,6 @@ class Principal extends Model
     public function teachersData()
     {
         // hasMany for one-to-many relationship
-        return $this->hasMany(Teacher::class, 'teach_id', 'prin_id');
+        return $this->hasMany(Teacher::class, 'prin_id', 'prin_id');
     }
 }

@@ -18,17 +18,14 @@ class Teacher extends Model
         'teach_address',
         'teach_city', 'prin_id'
     ];
+    // by teacher we will get principal data
     public function principal()
     {
         // belongsTo for one-to-many relationship on the child model
-        return $this->belongsTo(Principal::class, 'prin_id', 'teach_id');
+        return $this->belongsTo(Principal::class, 'prin_id');
     }
-    // public function students()
-    // {
-    //     // belongsTo for one-to-many relationship on the child model
-    //     return $this->belongsTo(Principal::class, 'prin_id', 'teach_id');
-    // }
-    // public function teachers(){
-    //     return $this->hasMany(Teacher::class,'teach_id', 'prin_id');
-    // }
+    public function students()
+    {
+        return $this->hasMany(Student::class, 'teach_id', 'teach_id');
+    }
 }

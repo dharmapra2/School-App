@@ -19,4 +19,9 @@ class Student extends Model
         'mother_name',
         'teach_id',
     ];
+    public function teachers()
+    {
+        // belongsTo for one-to-many relationship on the child model
+        return $this->belongsToMany(Teacher::class, 'teach_id', 'teach_id');
+    }
 }

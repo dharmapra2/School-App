@@ -24,6 +24,7 @@ class Teacher extends Model
         // belongsTo for one-to-many relationship on the child model
         return $this->belongsTo(Principal::class, 'prin_id');
     }
+    // by teacher we will get students data
     public function students()
     {
         return $this->hasMany(Student::class, 'teach_id', 'teach_id');

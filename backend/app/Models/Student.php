@@ -22,6 +22,11 @@ class Student extends Model
     public function teachers()
     {
         // belongsTo for one-to-many relationship on the child model
-        return $this->belongsToMany(Teacher::class, 'teach_id', 'teach_id');
+        return $this->belongsTo(Teacher::class, 'teach_id','teach_id');
+    }
+    public function principal()
+    {
+        // belongsTo for one-to-many relationship on the child model
+        return $this->belongsTo(Principal::class, 'prin_id');
     }
 }

@@ -12,12 +12,27 @@ class TeacherController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function getTeachers()
+    {
+        $data = Teacher::all();
+        if (count($data)>0) {
+            return response()->json($data, 200);
+        } else {
+            return response()->json(['error' => 'No Data is present..'], 404);
+        }
+    }
+    // to get principals data through teacher table foreign key
     public function index()
     {
         $data = Teacher::with('principal')->get();
         return response()->json($data, 200);
     }
-
+     // to get student data through teacher table foreign key
+     public function getDataWithStudent()
+     {
+         $data = Teacher::with('students')->get();
+         return response()->json($data, 200);
+     }
     /**
      * Show the form for creating a new resource.
      *
@@ -129,8 +144,14 @@ class TeacherController extends Controller
      * @param  \App\Models\Teacher  $teacher
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Teacher $teacher)
+    public function destroy(Teacher $teacher, $id)
     {
-        //
+        $Destroy = $teacher::find($id);
+        if ($Destroy) {
+            $Destroy->delete();
+            return response()->json(['success' => 'Data successfully deleted.'], 200);
+        } else {
+            return response()->json(['error' => 'No Data found.'], 404);
+        }
     }
 }

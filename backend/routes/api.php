@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PrincipalController;
+use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
 
 /*
@@ -21,7 +22,19 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('getPrincipal', [PrincipalController::class,'index']);
+// Teacacher actions
+Route::get('getTeachers', [TeacherController::class,'getTeachers']);
 Route::post('storeTeacher', [TeacherController::class,'store']);
 Route::get('showTeacher/{id}', [TeacherController::class,'show']);
 Route::get('showPrincipalByTeacher', [TeacherController::class,'index']);
+Route::get('showStudentsByTeacher', [TeacherController::class,'getDataWithStudent']);
 Route::put('updateTeacher/{id}', [TeacherController::class,'update']);
+Route::delete('deleteTeacher/{id}', [TeacherController::class,'destroy']);
+
+// student actions
+Route::get('getStudents', [StudentController::class,'getStudents']);
+Route::post('storeStudent', [StudentController::class,'store']);
+Route::get('showStudent/{id}', [StudentController::class,'show']);
+Route::get('showTeacherByStudent', [StudentController::class,'index']);
+Route::put('updateStudent/{id}', [StudentController::class,'update']);
+Route::delete('deleteStudent/{id}', [StudentController::class,'destroy']);

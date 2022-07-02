@@ -1,8 +1,15 @@
 import React from "react";
-import { useForm } from 'react-hook-form';
+import { useForm } from "react-hook-form";
 import { NavLink } from "react-router-dom";
 
 function AddTeacher() {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
+  const onSubmit = (data) => console.log(data);
   return (
     <div className="container-fluid mt-1 p-1">
       <div className="card text-center">
@@ -38,7 +45,7 @@ function AddTeacher() {
             Add Teacher Details
           </h4>
           <div className="card-body">
-            <form action="" className="">
+            <form action="" onSubmit={handleSubmit(onSubmit)}>
               <div className="row g-1">
                 <div className="col-sm">
                   <div className="form-floating mb-1 p-0">
@@ -49,8 +56,14 @@ function AddTeacher() {
                       id="floatingInputInvalid"
                       placeholder=" "
                       name="name"
+                      {...register("name", { required: true })}
                     />
                     <label htmlFor="floatingInputInvalid">Enter Name</label>
+                    {errors.name && (
+                      <span className="text-danger float-start small">
+                        This field is required
+                      </span>
+                    )}
                   </div>
                 </div>
                 <div className="col-sm">
@@ -61,8 +74,14 @@ function AddTeacher() {
                       id="floatingInputInvalid"
                       placeholder=" "
                       name="email"
+                      {...register("email", { required: true })}
                     />
                     <label htmlFor="floatingInputInvalid">Enter Email</label>
+                    {errors.email && (
+                      <span className="text-danger float-start small">
+                        This field is required
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
@@ -75,10 +94,16 @@ function AddTeacher() {
                       id="floatingInputInvalid"
                       placeholder=" "
                       name="qualification"
+                      {...register("qualification", { required: true })}
                     />
                     <label htmlFor="floatingInputInvalid">
                       Enter Qualification
                     </label>
+                    {errors.qualification && (
+                      <span className="text-danger float-start small">
+                        This field is required
+                      </span>
+                    )}
                   </div>
                 </div>
                 <div className="col-sm">
@@ -89,10 +114,16 @@ function AddTeacher() {
                       id="floatingInputInvalid"
                       placeholder=" "
                       name="phone"
+                      {...register("phone", { required: true })}
                     />
                     <label htmlFor="floatingInputInvalid">
                       Enter Contact Number
                     </label>
+                    {errors.phone && (
+                      <span className="text-danger float-start small">
+                        This field is required
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
@@ -105,8 +136,14 @@ function AddTeacher() {
                       id="floatingInputInvalid"
                       placeholder=" "
                       name="address"
+                      {...register("address", { required: true })}
                     />
                     <label htmlFor="floatingInputInvalid">Address</label>
+                    {errors.address && (
+                      <span className="text-danger float-start small">
+                        This field is required
+                      </span>
+                    )}
                   </div>
                 </div>
                 <div className="col-sm">
@@ -117,8 +154,14 @@ function AddTeacher() {
                       id="floatingInputInvalid"
                       placeholder=" "
                       name="city"
+                      {...register("city", { required: true })}
                     />
                     <label htmlFor="floatingInputInvalid">City</label>
+                    {errors.city && (
+                      <span className="text-danger float-start small">
+                        This field is required
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>

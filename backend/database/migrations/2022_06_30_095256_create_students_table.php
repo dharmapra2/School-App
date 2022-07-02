@@ -23,7 +23,7 @@ class CreateStudentsTable extends Migration
             $table->string('mother_name');
             // $table->unsignedBigInteger('teach_id');
             // $table->unsignedBigInteger('prin_id');
-            $table->foreignId('teach_id')->references('teach_id')->on('teachers')->onUpdate('cascade')->onDelete('cascade');
+            // $table->foreignId('teach_id')->references('teach_id')->on('teachers')->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('prin_id')->references('prin_id')->on('principal')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });

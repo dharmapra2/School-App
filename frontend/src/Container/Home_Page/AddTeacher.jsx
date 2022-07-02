@@ -9,7 +9,10 @@ function AddTeacher() {
     watch,
     formState: { errors },
   } = useForm();
+  // watch input value by passing the name of it
+  // console.log(watch("example"));
   const onSubmit = (data) => console.log(data);
+
   return (
     <div className="container-fluid mt-1 p-1">
       <div className="card text-center">
@@ -45,7 +48,7 @@ function AddTeacher() {
             Add Teacher Details
           </h4>
           <div className="card-body">
-            <form action="" onSubmit={handleSubmit(onSubmit)}>
+            <form onSubmit={handleSubmit(onSubmit)}>
               <div className="row g-1">
                 <div className="col-sm">
                   <div className="form-floating mb-1 p-0">
@@ -55,11 +58,11 @@ function AddTeacher() {
                       className="form-control form-sm-control border-primary"
                       id="floatingInputInvalid"
                       placeholder=" "
-                      name="name"
-                      {...register("name", { required: true })}
+                      name="teach_name"
+                      {...register("teach_name", { required: true })}
                     />
                     <label htmlFor="floatingInputInvalid">Enter Name</label>
-                    {errors.name && (
+                    {errors.teach_name && (
                       <span className="text-danger float-start small">
                         This field is required
                       </span>
@@ -73,11 +76,14 @@ function AddTeacher() {
                       className="form-control form-sm-control border-primary"
                       id="floatingInputInvalid"
                       placeholder=" "
-                      name="email"
-                      {...register("email", { required: true })}
+                      name="teach_email"
+                      {...register("teach_email", {
+                        required: true,
+                        pattern: /^[A-Za-z]+$/i,
+                      })}
                     />
                     <label htmlFor="floatingInputInvalid">Enter Email</label>
-                    {errors.email && (
+                    {errors.teach_email && (
                       <span className="text-danger float-start small">
                         This field is required
                       </span>
@@ -93,12 +99,10 @@ function AddTeacher() {
                       className="form-control form-sm-control border-primary"
                       id="floatingInputInvalid"
                       placeholder=" "
-                      name="qualification"
-                      {...register("qualification", { required: true })}
+                      name="teach_subject"
+                      {...register("teach_subject", { required: true })}
                     />
-                    <label htmlFor="floatingInputInvalid">
-                      Enter Qualification
-                    </label>
+                    <label htmlFor="floatingInputInvalid">Enter subject</label>
                     {errors.qualification && (
                       <span className="text-danger float-start small">
                         This field is required
@@ -113,13 +117,13 @@ function AddTeacher() {
                       className="form-control form-sm-control border-primary"
                       id="floatingInputInvalid"
                       placeholder=" "
-                      name="phone"
-                      {...register("phone", { required: true })}
+                      name="teach_contact"
+                      {...register("teach_contact", { required: true })}
                     />
                     <label htmlFor="floatingInputInvalid">
                       Enter Contact Number
                     </label>
-                    {errors.phone && (
+                    {errors.teach_contact && (
                       <span className="text-danger float-start small">
                         This field is required
                       </span>
@@ -135,11 +139,11 @@ function AddTeacher() {
                       className="form-control form-sm-control border-primary"
                       id="floatingInputInvalid"
                       placeholder=" "
-                      name="address"
-                      {...register("address", { required: true })}
+                      name="teach_address"
+                      {...register("teach_address", { required: true })}
                     />
                     <label htmlFor="floatingInputInvalid">Address</label>
-                    {errors.address && (
+                    {errors.teach_address && (
                       <span className="text-danger float-start small">
                         This field is required
                       </span>
@@ -153,15 +157,29 @@ function AddTeacher() {
                       className="form-control form-sm-control border-primary"
                       id="floatingInputInvalid"
                       placeholder=" "
-                      name="city"
-                      {...register("city", { required: true })}
+                      name="teach_city"
+                      {...register("teach_city", { required: true })}
                     />
                     <label htmlFor="floatingInputInvalid">City</label>
-                    {errors.city && (
+                    {errors.teach_city && (
                       <span className="text-danger float-start small">
                         This field is required
                       </span>
                     )}
+                  </div>
+                </div>
+                <div className="col-sm">
+                  <div className="form-floating mb-1 p-0">
+                    <select
+                      className="form-select border-primary"
+                      id="floatingSelect"
+                      {...register("gender", { required: true })}
+                    >
+                      <option value="male">male</option>
+                      <option value="female">female</option>
+                      <option value="other">other</option>
+                    </select>
+                    <label htmlFor="floatingSelect">Select Gender</label>
                   </div>
                 </div>
               </div>

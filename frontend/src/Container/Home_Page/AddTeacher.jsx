@@ -6,7 +6,8 @@ import Swal from "sweetalert2";
 function AddTeacher() {
   const {
     register,
-    handleSubmit,reset,
+    handleSubmit,
+    reset,
     formState: { errors },
   } = useForm();
   const onSubmit = async (data) => {
@@ -22,7 +23,7 @@ function AddTeacher() {
             title: "Saved",
             text: res.data.success,
           });
-         reset();
+          reset();
         } else if (res.status === 206) {
           Swal.fire({
             icon: "warning",
@@ -195,18 +196,20 @@ function AddTeacher() {
                     )}
                   </div>
                 </div>
-                <div className="col-sm">
-                  <div className="form-floating mb-1 p-0">
-                    <select
-                      className="form-select border-primary"
-                      id="floatingSelect"
-                      {...register("gender", { required: true })}
-                    >
-                      <option value="male">male</option>
-                      <option value="female">female</option>
-                      <option value="other">other</option>
-                    </select>
-                    <label htmlFor="floatingSelect">Select Gender</label>
+                <div className="row g-1">
+                  <div className="col-sm">
+                    <div className="form-floating mb-1 p-0">
+                      <select
+                        className="form-select border-primary"
+                        id="floatingSelect"
+                        {...register("gender", { required: true })}
+                      >
+                        <option value="male">male</option>
+                        <option value="female">female</option>
+                        <option value="other">other</option>
+                      </select>
+                      <label htmlFor="floatingSelect">Select Gender</label>
+                    </div>
                   </div>
                 </div>
               </div>

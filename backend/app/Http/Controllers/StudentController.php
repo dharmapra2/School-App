@@ -56,6 +56,7 @@ class StudentController extends Controller
             'stud_mother_name' => 'required',
             'stud_address' => 'required',
             'prin_id' => 'required',
+            'gender' => 'required',
             'teach_id' => 'required|array',
         ]);
         $search = Student::where('stud_name', $request->stud_name)->where('stud_email', $request->stud_email)->get();
@@ -69,6 +70,7 @@ class StudentController extends Controller
                 'mother_name' => $request['stud_mother_name'],
                 'address' => $request['stud_address'],
                 'prin_id' => $request['prin_id'],
+                'gender' => $request['gender'],
             ]);
             $teach_id = $request->teach_id;
             $Student->teachers()->attach($teach_id);

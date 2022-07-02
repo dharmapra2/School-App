@@ -1,7 +1,64 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { NavLink } from "react-router-dom";
+import { http } from "../../CommonApi/http";
+import Swal from "sweetalert2";
 
 function AddStudent() {
+  const [teachers, setTeachers] = useState([]);
+  useEffect(() => {
+    const getTeacher = async () => {
+      await http
+        .get("getTeachers")
+        .then((res) => {
+          setTeachers(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+    return () => {
+      getTeacher();
+    };
+  }, []);
+  // console.log(teachers);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm();
+  const onSubmit = async (data) => {
+    data = JSON.stringify({ ...data, prin_id: 1 });
+    console.log(data);
+    // await http
+    //   .post("storeStudent", data)
+    //   .then((res) => {
+    //     // console.log(res);
+    //     if (res.status === 200) {
+    //       Swal.fire({
+    //         icon: "success",
+    //         title: "Saved",
+    //         text: res.data.success,
+    //       });
+    //       reset();
+    //     } else if (res.status === 206) {
+    //       Swal.fire({
+    //         icon: "warning",
+    //         title: "",
+    //         text: res.data.warning,
+    //       });
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //     Swal.fire({
+    //       icon: "error",
+    //       title: "Oops...",
+    //       text: "Something went wrong!",
+    //     });
+    //   });
+  };
   return (
     <div className="container-fluid mt-1 p-1">
       <div className="card text-center">
@@ -37,7 +94,7 @@ function AddStudent() {
             Add Student Details
           </h4>
           <div className="card-body">
-            <form action="" className="">
+            <form id="form" onSubmit={handleSubmit(onSubmit)}>
               <div className="row g-1">
                 <div className="col-sm">
                   <div className="form-floating mb-1 p-0">
@@ -47,7 +104,8 @@ function AddStudent() {
                       className="form-control form-sm-control border-info"
                       id="floatingInputInvalid"
                       placeholder=" "
-                      name="name"
+                      name="stud_name"
+                      {...register("stud_name", { required: true })}
                     />
                     <label htmlFor="floatingInputInvalid">
                       Enter Full Name
@@ -61,7 +119,8 @@ function AddStudent() {
                       className="form-control form-sm-control border-info"
                       id="floatingInputInvalid"
                       placeholder=" "
-                      name="email"
+                      name="stud_email"
+                      {...register("stud_email", { required: true })}
                     />
                     <label htmlFor="floatingInputInvalid">Enter Email Id</label>
                   </div>
@@ -75,7 +134,8 @@ function AddStudent() {
                       className="form-control form-sm-control border-info"
                       id="floatingInputInvalid"
                       placeholder=" "
-                      name="qualification"
+                      name="stud_class"
+                      {...register("stud_class", { required: true })}
                     />
                     <label htmlFor="floatingInputInvalid">Enter Class</label>
                   </div>
@@ -87,7 +147,8 @@ function AddStudent() {
                       className="form-control form-sm-control border-info"
                       id="floatingInputInvalid"
                       placeholder=" "
-                      name="phone"
+                      name="stud_ph_no"
+                      {...register("stud_ph_no", { required: true })}
                     />
                     <label htmlFor="floatingInputInvalid">
                       Enter Contact Number
@@ -103,7 +164,8 @@ function AddStudent() {
                       className="form-control form-sm-control border-info"
                       id="floatingInputInvalid"
                       placeholder=" "
-                      name="father_name"
+                      name="stud_father_name"
+                      {...register("stud_father_name", { required: true })}
                     />
                     <label htmlFor="floatingInputInvalid">
                       Enter Father Number
@@ -117,7 +179,8 @@ function AddStudent() {
                       className="form-control form-sm-control border-info"
                       id="floatingInputInvalid"
                       placeholder=" "
-                      name="mother_name"
+                      name="stud_mother_name"
+                      {...register("stud_mother_name", { required: true })}
                     />
                     <label htmlFor="floatingInputInvalid">
                       Enter Mother Name
@@ -133,7 +196,8 @@ function AddStudent() {
                       className="form-control form-sm-control border-info"
                       id="floatingInputInvalid"
                       placeholder=" "
-                      name="address"
+                      name="stud_address"
+                      {...register("stud_address", { required: true })}
                     />
                     <label htmlFor="floatingInputInvalid">
                       Enter Full Address
@@ -146,16 +210,40 @@ function AddStudent() {
                       className="form-select form-sm-select border-info"
                       id="floatingSelect"
                       aria-label="Floating label select example"
-                      name="techer"
+                      name="techers[]" multiple='multiple'
+                      {...register("teachers[]")}
                     >
-                      <option selected disabled>
+                      {/* <option selected disabled>
                         select Teacher
-                      </option>
-                      <option value="1">One</option>
-                      <option value="2">Two</option>
-                      <option value="3">Three</option>
+                      </option> */}
+                      {teachers.map((data, i) => {
+                        return (
+                          <option value={data.teach_id} key={i}>
+                            {data.teach_name}
+                          </option>
+                        );
+                      })}
                     </select>
                     <label htmlFor="floatingSelect">Assign Teacher</label>
+                  </div>
+                </div>
+              </div>
+              <div className="row g-1">
+                <div className="col-sm">
+                  <div className="form-floating mb-1 p-0">
+                    <select
+                      className="form-select border-primary"
+                      id="floatingSelect"
+                      {...register("gender", { required: true })}
+                    >
+                      <option selected disabled>
+                        select Gender
+                      </option>
+                      <option value="male">male</option>
+                      <option value="female">female</option>
+                      <option value="other">other</option>
+                    </select>
+                    <label htmlFor="floatingSelect">Select Gender</label>
                   </div>
                 </div>
               </div>

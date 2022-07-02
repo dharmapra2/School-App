@@ -6,7 +6,7 @@ import Swal from "sweetalert2";
 function AddTeacher() {
   const {
     register,
-    handleSubmit,
+    handleSubmit,reset,
     formState: { errors },
   } = useForm();
   const onSubmit = async (data) => {
@@ -15,14 +15,14 @@ function AddTeacher() {
     await http
       .post("storeTeacher", data)
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         if (res.status === 200) {
           Swal.fire({
             icon: "success",
             title: "Saved",
             text: res.data.success,
           });
-          document.getElementById("form").reset();
+         reset();
         } else if (res.status === 206) {
           Swal.fire({
             icon: "warning",

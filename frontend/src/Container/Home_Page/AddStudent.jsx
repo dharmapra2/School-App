@@ -77,9 +77,7 @@ function AddStudent() {
                       placeholder=" "
                       name="qualification"
                     />
-                    <label htmlFor="floatingInputInvalid">
-                      Enter Class
-                    </label>
+                    <label htmlFor="floatingInputInvalid">Enter Class</label>
                   </div>
                 </div>
                 <div className="col-sm">

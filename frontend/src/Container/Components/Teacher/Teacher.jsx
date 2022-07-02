@@ -20,7 +20,7 @@ function Teacher() {
     setShowData(dataIs[0]);
   }
   function handleStudents(id) {
-    let studData = teachers.filter((data) => data.teach_id == id);
+    let studData = teachers.filter((data) => data.teach_id === id);
     setStudents(studData[0].students);
   }
   // console.log(showData.students);
@@ -115,7 +115,7 @@ function Teacher() {
                         <pre>Teacher Name :</pre>
                         <pre>Teacher Email :</pre>
                         <pre>Teacher Phone No. :</pre>
-                        <pre>Teacher Qualification :</pre>
+                        <pre>Subjects :</pre>
                         <pre>Teacher Address :</pre>
                         <pre>No of Students assigned :</pre>
                       </div>
@@ -123,7 +123,7 @@ function Teacher() {
                         <pre>{showData.teach_name}</pre>
                         <pre>{showData.teach_email}</pre>
                         <pre>{showData.teach_contact}</pre>
-                        <pre>{showData.teach_qualification}</pre>
+                        <pre>{showData.teach_subject}</pre>
                         <pre>{showData.teach_address}</pre>
                         <pre>{showData.students?.length}</pre>
                       </div>
@@ -170,16 +170,24 @@ function Teacher() {
                         </tr>
                       </thead>
                       <tbody>
-                        {students.map((item, i) => {
-                          return (
-                            <tr key={i}>
-                              <td>{item.stud_id}</td>
-                              <td>{item.stud_name}</td>
-                              <td>{item.stud_email}</td>
-                              <td>{item.stud_class}</td>
-                            </tr>
-                          );
-                        })}
+                        {students.length > 0 ? (
+                          students.map((item, i) => {
+                            return (
+                              <tr key={i}>
+                                <td>{item.stud_id}</td>
+                                <td>{item.stud_name}</td>
+                                <td>{item.stud_email}</td>
+                                <td>{item.stud_class}</td>
+                              </tr>
+                            );
+                          })
+                        ) : (
+                          <tr>
+                            <td colSpan={4} className="text-center">
+                              No Student has assigned..
+                            </td>
+                          </tr>
+                        )}
                       </tbody>
                     </table>
                   </div>

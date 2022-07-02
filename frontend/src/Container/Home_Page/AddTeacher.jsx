@@ -1,17 +1,45 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { NavLink } from "react-router-dom";
-
+import { http } from "../../CommonApi/http";
+import Swal from "sweetalert2";
 function AddTeacher() {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm();
-  // watch input value by passing the name of it
-  // console.log(watch("example"));
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = async (data) => {
+    data = JSON.stringify({ ...data, prin_id: 1 });
+    console.log(data);
+    await http
+      .post("storeTeacher", data)
+      .then((res) => {
+        console.log(res);
+        if (res.status === 200) {
+          Swal.fire({
+            icon: "success",
+            title: "Saved",
+            text: res.data.success,
+          });
+          document.getElementById("form").reset();
+        } else if (res.status === 206) {
+          Swal.fire({
+            icon: "warning",
+            title: "",
+            text: res.data.warning,
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Something went wrong!",
+        });
+      });
+  };
 
   return (
     <div className="container-fluid mt-1 p-1">
@@ -48,7 +76,7 @@ function AddTeacher() {
             Add Teacher Details
           </h4>
           <div className="card-body">
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form id="form" onSubmit={handleSubmit(onSubmit)}>
               <div className="row g-1">
                 <div className="col-sm">
                   <div className="form-floating mb-1 p-0">
@@ -79,7 +107,6 @@ function AddTeacher() {
                       name="teach_email"
                       {...register("teach_email", {
                         required: true,
-                        pattern: /^[A-Za-z]+$/i,
                       })}
                     />
                     <label htmlFor="floatingInputInvalid">Enter Email</label>
@@ -103,7 +130,7 @@ function AddTeacher() {
                       {...register("teach_subject", { required: true })}
                     />
                     <label htmlFor="floatingInputInvalid">Enter subject</label>
-                    {errors.qualification && (
+                    {errors.teach_subject && (
                       <span className="text-danger float-start small">
                         This field is required
                       </span>
@@ -184,7 +211,9 @@ function AddTeacher() {
                 </div>
               </div>
               <div className="row g-1">
-                <button className="btn btn-primary">Add Teacher</button>
+                <button type="submit" className="btn btn-primary">
+                  Add Teacher
+                </button>
               </div>
             </form>
           </div>

@@ -54,10 +54,11 @@ class TeacherController extends Controller
         $request->validate([
             'teach_name' => 'required|string',
             'teach_email' => 'required|email',
-            'teach_qualification' => 'required',
+            'teach_subject' => 'required',
             'teach_contact' => 'required',
             'teach_address' => 'required',
             'teach_city' => 'required',
+            'gender' => 'required',
             'prin_id' => 'required',
         ]);
         $search = Teacher::where('teach_name', $request->teach_name)->where('teach_email', $request->teach_email)->get();
@@ -65,10 +66,11 @@ class TeacherController extends Controller
             $Teacher = Teacher::create([
                 'teach_name' => $request['teach_name'],
                 'teach_email' => $request['teach_email'],
-                'teach_qualification' => $request['teach_qualification'],
+                'teach_subject' => $request['teach_subject'],
                 'teach_contact' => $request['teach_contact'],
                 'teach_address' => $request['teach_address'],
                 'teach_city' => $request['teach_city'],
+                'gender' => $request['gender'],
                 'prin_id' => $request['prin_id'],
             ]);
             return response()->json(['success' => 'Teacher data is  Sucessfully added.'], 200);
@@ -126,18 +128,20 @@ class TeacherController extends Controller
         $request->validate([
             'teach_name' => 'required|string',
             'teach_email' => 'required|email',
-            'teach_qualification' => 'required',
+            'teach_subject' => 'required',
             'teach_contact' => 'required',
             'teach_address' => 'required',
             'teach_city' => 'required',
+            'gender' => 'required',
         ]);
         $update = $teacher::where('teach_id', $id)->update([
             'teach_name' => $request['teach_name'],
             'teach_email' => $request['teach_email'],
-            'teach_qualification' => $request['teach_qualification'],
+            'teach_subject' => $request['teach_subject'],
             'teach_contact' => $request['teach_contact'],
             'teach_address' => $request['teach_address'],
             'teach_city' => $request['teach_city'],
+            'gender' => $request['gender'],
         ]);
         if ($update) {
             return response()->json(['success' => 'Teacher\'s data is updated Sucessfully.'], 200);

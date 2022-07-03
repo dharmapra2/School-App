@@ -70,20 +70,6 @@ function Student() {
       },
       allowOutsideClick: () => !Swal.isLoading(),
     });
-    // .then((result) => {
-    //   if (result.isConfirmed) {
-
-    //   } else if (
-    //     /* Read more about handling dismissals below */
-    //     result.dismiss === Swal.DismissReason.cancel
-    //   ) {
-    //     swalWithBootstrapButtons.fire(
-    //       "Cancelled",
-    //       "Your data is safe :)",
-    //       "error"
-    //     );
-    //   }
-    // });
   }
   let html = "",
     teacherHtml = "";

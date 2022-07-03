@@ -1,35 +1,81 @@
 import React, { useEffect, useState } from "react";
 import { http } from "../../../CommonApi/http";
 import { NavLink } from "react-router-dom";
-// import Swal from "sweetalert2";
+import Swal from "sweetalert2";
 
 function Teacher() {
   const [teachers, setteachers] = useState([]);
   const [students, setStudents] = useState([]);
-  const [showData, setShowData] = useState([]);
-  const [deleteTeacher, setDeleteTeacher] = useState([]);
+  const [ showData, setShowData ] = useState([]);
+  
+  const getTeachersData = async () => {
+    await http.get("showStudentsByTeacher").then((res) => {
+      let [...data] = res.data;
+      setteachers(data);
+    });
+  };
+
   useEffect(() => {
-    const getTeachersData = async () => {
-      await http.get("showStudentsByTeacher").then((res) => {
-        let [...data] = res.data;
-        setteachers(data);
-      });
-    };
     return () => {
       getTeachersData();
     };
   }, []);
+
   function handleShow(id) {
     let dataIs = teachers.filter((data) => data.teach_id === id);
     setShowData(dataIs[0]);
   }
+
   function handleStudents(id) {
     let studData = teachers.filter((data) => data.teach_id === id);
     setStudents(studData[0].students);
   }
+
+  const swalWithBootstrapButtons = Swal.mixin({
+    customClass: {
+      confirmButton: "btn btn-success",
+      cancelButton: "btn btn-danger",
+    },
+    buttonsStyling: false,
+  });
   function handleDelete(id) {
-    let studData = teachers.filter((data) => data.teach_id === id);
-    setDeleteTeacher(studData[0]);
+    swalWithBootstrapButtons.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "No, cancel!",
+      reverseButtons: true,
+      showLoaderOnConfirm: true,
+      preConfirm: async () => {
+        return await http
+          .delete(`deleteTeacher/${id}`)
+          .then((response) => {
+            if (response.status === 200) {
+              swalWithBootstrapButtons.fire(
+                "Deleted!",
+                "Your data has been deleted.",
+                "success"
+              );
+              getTeachersData();
+            } else if (
+              /* Read more about handling dismissals below */
+              response.status === 404
+            ) {
+              swalWithBootstrapButtons.fire(
+                "Cancelled",
+                "Your data is safe :)",
+                "error"
+              );
+            }
+          })
+          .catch((error) => {
+            Swal.showValidationMessage(`Request failed: ${error}`);
+          });
+      },
+      allowOutsideClick: () => !Swal.isLoading(),
+    });
   }
   // console.log(showData.students);
   let html = "";
@@ -68,7 +114,7 @@ function Teacher() {
                     className="btn m-1 btn-warning"
                     to={`updateTeacher/${data.teach_id}`}
                   >
-                    Update
+                    Update Teacher
                   </NavLink>
                 </li>
                 <li>
@@ -79,7 +125,7 @@ function Teacher() {
                     data-bs-target="#exampleModal1"
                     onClick={() => handleDelete(data.teach_id)}
                   >
-                    Details
+                    Delete Teacher
                   </button>
                 </li>
               </ul>

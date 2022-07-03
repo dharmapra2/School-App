@@ -266,6 +266,9 @@ function AddStudent() {
                           This field is required
                         </span>
                       )}
+                      {/* <option  disabled>
+                        select Gender
+                      </option> */}
                       <option defaultValue="male">male</option>
                       <option defaultValue="female">female</option>
                       <option defaultValue="other">other</option>

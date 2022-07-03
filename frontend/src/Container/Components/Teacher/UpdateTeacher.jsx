@@ -4,16 +4,16 @@ import { useParams, useNavigate } from "react-router-dom";
 import { http } from "../../../CommonApi/http";
 import Swal from "sweetalert2";
 function UpdateTeacher() {
+  const [teacherData, setTeacherData] = useState([]);
   const navigate = useNavigate();
   const { id } = useParams();
-  console.log(id);
   useEffect(() => {
     const getTeacherData = async () => {
       await http
         .get(`showTeacher/${id}`)
         .then((res) => {
           if (res.status === 200) {
-            console.log(res);
+            setTeacherData(res.data.data);
           }
         })
         .catch((err) => {
@@ -35,7 +35,11 @@ function UpdateTeacher() {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      ...teacherData,
+    },
+  });
   const onSubmit = async (data) => {
     data = JSON.stringify({ ...data, prin_id: 1 });
     console.log(data);
@@ -211,6 +215,11 @@ function UpdateTeacher() {
                 <label htmlFor="floatingSelect">Select Gender</label>
               </div>
             </div>
+          </div>
+          <div className="row g-1">
+            <button type="submit" className="btn btn-sm btn-outline-primary">
+              Update teacher
+            </button>
           </div>
         </div>
       </form>

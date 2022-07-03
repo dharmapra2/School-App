@@ -14,7 +14,7 @@ class TeacherController extends Controller
      */
     public function getTeachers()
     {
-        $data = Teacher::get(['teach_id','teach_name']);
+        $data = Teacher::get(['teach_id', 'teach_name']);
         if (count($data) > 0) {
             return response()->json($data, 200);
         } else {

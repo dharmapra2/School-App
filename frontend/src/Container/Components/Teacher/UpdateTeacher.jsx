@@ -6,14 +6,23 @@ import Swal from "sweetalert2";
 function UpdateTeacher() {
   const [teacherData, setTeacherData] = useState([]);
   const navigate = useNavigate();
-  const { id } = useParams();
+  let { id } = useParams();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    mode: "onBlur",
+  });
   useEffect(() => {
     const getTeacherData = async () => {
       await http
         .get(`showTeacher/${id}`)
         .then((res) => {
           if (res.status === 200) {
-            setTeacherData(res.data.data);
+            setTeacherData(res.data);
+            reset(res.data);
           }
         })
         .catch((err) => {
@@ -28,63 +37,43 @@ function UpdateTeacher() {
     return () => {
       getTeacherData();
     };
-  }, []);
-
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm({
-    defaultValues: {
-      ...teacherData,
-    },
-  });
+  }, [id, navigate, reset]);
   const onSubmit = async (data) => {
-    data = JSON.stringify({ ...data, prin_id: 1 });
-    console.log(data);
-    // await http
-    //   .post("storeTeacher", data)
-    //   .then((res) => {
-    //     // console.log(res);
-    //     if (res.status === 200) {
-    //       Swal.fire({
-    //         icon: "success",
-    //         title: "Saved",
-    //         text: res.data.success,
-    //       });
-    //       reset();
-    //     } else if (res.status === 206) {
-    //       Swal.fire({
-    //         icon: "warning",
-    //         title: "",
-    //         text: res.data.warning,
-    //       });
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //     Swal.fire({
-    //       icon: "error",
-    //       title: "Oops...",
-    //       text: "Something went wrong!",
-    //     });
-    //   });
+    data = JSON.stringify(data);
+    await http
+      .put(`updateTeacher/${id}`, data)
+      .then((res) => {
+        // console.log(res);
+        if (res.status === 200) {
+          Swal.fire({
+            icon: "success",
+            title: "Saved",
+            text: res.data.success,
+          });
+          reset();
+          navigate("/teacher");
+        } else if (res.status === 206) {
+          Swal.fire({
+            icon: "warning",
+            title: "",
+            text: res.data.warning,
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Something went wrong!",
+        });
+      });
   };
   return (
     <div className="modal-body">
       <form id="form" onSubmit={handleSubmit(onSubmit)}>
         <div className="row g-1">
           <div className="col-sm">
-            <input
-              type="hidden"
-              className="form-control form-sm-control border-warning"
-              id="floatingInputInvalid"
-              placeholder=" "
-              ref={register}
-              name="teach_id"
-              {...register("teach_id", { required: true })}
-            />
             <div className="form-floating mb-1 p-0">
               {/* is-valid */}
               <input
@@ -92,9 +81,9 @@ function UpdateTeacher() {
                 className="form-control form-sm-control border-warning"
                 id="floatingInputInvalid"
                 placeholder=" "
-                ref={register}
+                defaultValue={teacherData ? teacherData.teach_name : ""}
                 name="teach_name"
-                {...register("teach_name", { required: true })}
+                {...register("teach_name")}
               />
               <label htmlFor="floatingInputInvalid">Enter Name</label>
               {errors.teach_name && (
@@ -112,9 +101,9 @@ function UpdateTeacher() {
                 id="floatingInputInvalid"
                 placeholder=" "
                 name="teach_email"
-                {...register("teach_email", {
-                  required: true,
-                })}
+                ref={register}
+                // defaultValue={teacherData ? teacherData.teach_email : ""}
+                {...register("teach_email")}
               />
               <label htmlFor="floatingInputInvalid">Enter Email</label>
               {errors.teach_email && (
@@ -134,7 +123,8 @@ function UpdateTeacher() {
                 id="floatingInputInvalid"
                 placeholder=" "
                 name="teach_subject"
-                {...register("teach_subject", { required: true })}
+                defaultValue={teacherData ? teacherData.teach_subject : ""}
+                {...register("teach_subject")}
               />
               <label htmlFor="floatingInputInvalid">Enter subject</label>
               {errors.teach_subject && (
@@ -152,7 +142,8 @@ function UpdateTeacher() {
                 id="floatingInputInvalid"
                 placeholder=" "
                 name="teach_contact"
-                {...register("teach_contact", { required: true })}
+                defaultValue={teacherData ? teacherData.teach_contact : ""}
+                {...register("teach_contact")}
               />
               <label htmlFor="floatingInputInvalid">Enter Contact Number</label>
               {errors.teach_contact && (
@@ -172,7 +163,8 @@ function UpdateTeacher() {
                 id="floatingInputInvalid"
                 placeholder=" "
                 name="teach_address"
-                {...register("teach_address", { required: true })}
+                defaultValue={teacherData ? teacherData.teach_address : ""}
+                {...register("teach_address")}
               />
               <label htmlFor="floatingInputInvalid">Address</label>
               {errors.teach_address && (
@@ -190,7 +182,8 @@ function UpdateTeacher() {
                 id="floatingInputInvalid"
                 placeholder=" "
                 name="teach_city"
-                {...register("teach_city", { required: true })}
+                defaultValue={teacherData ? teacherData.teach_city : ""}
+                {...register("teach_city")}
               />
               <label htmlFor="floatingInputInvalid">City</label>
               {errors.teach_city && (
@@ -206,11 +199,12 @@ function UpdateTeacher() {
                 <select
                   className="form-select border-warning"
                   id="floatingSelect"
-                  {...register("gender", { required: true })}
+                  defaultValue={teacherData ? teacherData.gender : ""}
+                  {...register("gender")}
                 >
-                  <option value="male">male</option>
-                  <option value="female">female</option>
-                  <option value="other">other</option>
+                  <option defaultValue="male">male</option>
+                  <option defaultValue="female">female</option>
+                  <option defaultValue="other">other</option>
                 </select>
                 <label htmlFor="floatingSelect">Select Gender</label>
               </div>

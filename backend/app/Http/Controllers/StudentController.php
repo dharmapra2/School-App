@@ -173,8 +173,8 @@ class StudentController extends Controller
     {
         $Destroy = $Student::find($id);
         if ($Destroy) {
-            $Destroy->delete();
             $Destroy->teachers()->detach();
+            $Destroy->delete();
             return response()->json(['success' => 'Data successfully deleted.'], 200);
         } else {
             return response()->json(['error' => 'No Data found.'], 404);

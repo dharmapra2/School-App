@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { http } from "../../../CommonApi/http";
 import { NavLink } from "react-router-dom";
+import Swal from "sweetalert2";
 function Student() {
   const [students, setstudents] = useState([]);
   const [teachers, setTeachers] = useState([]);
   const [showData, setShowData] = useState([]);
+  const getstudentsData = async () => {
+    await http.get("showTeacherByStudent").then((res) => {
+      let [...data] = res.data;
+      setstudents(data);
+    });
+  };
   useEffect(() => {
-    const getstudentsData = async () => {
-      await http.get("showTeacherByStudent").then((res) => {
-        let [...data] = res.data;
-        setstudents(data);
-      });
-    };
     return () => {
       getstudentsData();
     };
@@ -23,6 +24,66 @@ function Student() {
   function handleTeachers(id) {
     let studData = students.filter((data) => data.stud_id === id);
     setTeachers(studData[0].teachers);
+  }
+  const swalWithBootstrapButtons = Swal.mixin({
+    customClass: {
+      confirmButton: "btn btn-success",
+      cancelButton: "btn btn-danger",
+    },
+    buttonsStyling: false,
+  });
+  function handleDelete(id) {
+    swalWithBootstrapButtons.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "No, cancel!",
+      reverseButtons: true,
+      showLoaderOnConfirm: true,
+      preConfirm: async () => {
+        return await http
+          .delete(`deleteStudent/${id}`)
+          .then((response) => {
+            if (response.status === 200) {
+              swalWithBootstrapButtons.fire(
+                "Deleted!",
+                "Your data has been deleted.",
+                "success"
+              );
+              getstudentsData();
+            } else if (
+              /* Read more about handling dismissals below */
+              response.status === 404
+            ) {
+              swalWithBootstrapButtons.fire(
+                "Cancelled",
+                "Your data is safe :)",
+                "error"
+              );
+            }
+          })
+          .catch((error) => {
+            Swal.showValidationMessage(`Request failed: ${error}`);
+          });
+      },
+      allowOutsideClick: () => !Swal.isLoading(),
+    });
+    // .then((result) => {
+    //   if (result.isConfirmed) {
+
+    //   } else if (
+    //     /* Read more about handling dismissals below */
+    //     result.dismiss === Swal.DismissReason.cancel
+    //   ) {
+    //     swalWithBootstrapButtons.fire(
+    //       "Cancelled",
+    //       "Your data is safe :)",
+    //       "error"
+    //     );
+    //   }
+    // });
   }
   let html = "",
     teacherHtml = "";
@@ -70,9 +131,9 @@ function Student() {
                     className="btn m-1 btn-danger"
                     data-bs-toggle="modal"
                     data-bs-target="#exampleModal1"
-                    // onClick={() => handleDelete(data.teach_id)}
+                    onClick={() => handleDelete(data.stud_id)}
                   >
-                    Details
+                    Delete
                   </button>
                 </li>
               </ul>

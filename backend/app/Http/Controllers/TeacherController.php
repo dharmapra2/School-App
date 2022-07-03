@@ -160,6 +160,7 @@ class TeacherController extends Controller
     {
         $Destroy = $teacher::find($id);
         if ($Destroy) {
+            $Destroy->students()->detach();
             $Destroy->delete();
             return response()->json(['success' => 'Data successfully deleted.'], 200);
         } else {

@@ -57,7 +57,7 @@ class StudentController extends Controller
             'stud_address' => 'required',
             'prin_id' => 'required',
             'gender' => 'required',
-            'teach_id' => 'required|array',
+            'teach_id' => 'array',
         ]);
         $search = Student::where('stud_name', $request->stud_name)->where('stud_email', $request->stud_email)->get();
         if (count($search) == 0) {

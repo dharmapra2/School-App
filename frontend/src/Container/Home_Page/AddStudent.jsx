@@ -44,34 +44,37 @@ function AddStudent() {
   } = useForm();
   const onSubmit = async (data) => {
     data = JSON.stringify({ ...data, prin_id: 1, teach_id: value });
-    console.log(data);
-    // await http
-    //   .post("storeStudent", data)
-    //   .then((res) => {
-    //     // console.log(res);
-    //     if (res.status === 200) {
-    //       Swal.fire({
-    //         icon: "success",
-    //         title: "Saved",
-    //         text: res.data.success,
-    //       });
-    //       reset();
-    //     } else if (res.status === 206) {
-    //       Swal.fire({
-    //         icon: "warning",
-    //         title: "",
-    //         text: res.data.warning,
-    //       });
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //     Swal.fire({
-    //       icon: "error",
-    //       title: "Oops...",
-    //       text: "Something went wrong!",
-    //     });
-    //   });
+    // console.log(data);
+    await http
+      .post("storeStudent", data)
+      .then((res) => {
+        // console.log(res);
+        if (res.status === 200) {
+          Swal.fire({
+            icon: "success",
+            title: "Saved",
+            text: res.data.success,
+          });
+          setvalue([]);
+          reset();
+        } else if (res.status === 206) {
+          setvalue([]);
+          Swal.fire({
+            icon: "warning",
+            title: "",
+            text: res.data.warning,
+          });
+          reset();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Something went wrong!",
+        });
+      });
   };
   return (
     <div className="container-fluid mt-1 p-1">
@@ -177,11 +180,15 @@ function AddStudent() {
                       id="floatingInputInvalid"
                       placeholder=" "
                       name="stud_ph_no"
-                      {...register("stud_ph_no", { required: true })}
+                      {...register("stud_ph_no", {
+                        required: true,
+                        pattern:
+                          /((\+*)((0[ -]*)*|((91 )*))((\d{12})+|(\d{10})+))|\d{5}([- ]*)\d{6}/,
+                      })}
                     />
                     {errors.stud_ph_no && (
-                      <span className="text-danger float-start small">
-                        This field is required
+                      <span id="span" className="text-danger float-start small">
+                        Enter Contact Number Like : +919090522384
                       </span>
                     )}
                     <label htmlFor="floatingInputInvalid">
@@ -282,7 +289,7 @@ function AddStudent() {
                   <MultiSelect
                     onChange={handleOnchange}
                     options={options}
-                    className="form-control border-info "
+                    className="form-control border-info"
                   />
                 </div>
               </div>

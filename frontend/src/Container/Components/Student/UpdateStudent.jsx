@@ -6,24 +6,27 @@ import "react-multiple-select-dropdown-lite/dist/index.css";
 import { http } from "../../../CommonApi/http";
 import Swal from "sweetalert2";
 function UpdateStudent() {
-  const [teacherData, setTeacherData] = useState([]);
+  const [selectedTeacher, setSelectedTeacher] = useState([]);
   const navigate = useNavigate();
+  // fetch data through url
   let { id } = useParams();
-  const [teachers, setTeachers] = useState([]);
+  const [students, setStudents] = useState([]);
+  // value for multiple checkboxs of teachers
   const [value, setvalue] = useState([]);
+  // get teachers data to show as options
   useEffect(() => {
-    const getTeacher = async () => {
+    const getstudent = async () => {
       await http
         .get("getTeachers")
         .then((res) => {
-          setTeachers(res.data);
+          setStudents(res.data);
         })
         .catch((err) => {
           console.log(err);
         });
     };
     return () => {
-      getTeacher();
+      getstudent();
     };
   }, []);
   const {
@@ -34,13 +37,26 @@ function UpdateStudent() {
   } = useForm({
     mode: "onBlur",
   });
+  // for multiple select options
+  const handleOnchange = (val) => {
+    // converting char to char array and then  to number array
+    setvalue(val.split(",").map(Number));
+  };
+  // console.log(value);
+  // destructring object and changing thier key names
+  const options = students.map(({ teach_id, teach_name }) => ({
+    label: teach_name,
+    value: teach_id,
+  }));
+
+  // fetch students based on thier ID's
   useEffect(() => {
-    const getTeacherData = async () => {
+    const getstudentData = async () => {
       await http
-        .get(`showTeacher/${id}`)
+        .get(`showStudentWithTeacher/${id}`)
         .then((res) => {
           if (res.status === 200) {
-            setTeacherData(res.data);
+            setSelectedTeacher(res.data?.teachers);
             reset(res.data);
           }
         })
@@ -50,17 +66,19 @@ function UpdateStudent() {
             title: "Oops...",
             text: err.response.data.warning,
           });
-          navigate("/teacher");
+          // navigate("/student");
         });
     };
     return () => {
-      getTeacherData();
+      getstudentData();
     };
   }, [id, navigate, reset]);
+  // console.log(selectedTeacher.map((data) => data.teach_id));
   const onSubmit = async (data) => {
-    data = JSON.stringify(data);
+    data = JSON.stringify({ ...data, teach_id: value });
+    // console.log(data);
     await http
-      .put(`updateTeacher/${id}`, data)
+      .put(`updateStudent/${id}`, data)
       .then((res) => {
         // console.log(res);
         if (res.status === 200) {
@@ -70,12 +88,12 @@ function UpdateStudent() {
             text: res.data.success,
           });
           reset();
-          navigate("/teacher");
-        } else if (res.status === 206) {
+          navigate("/student");
+        } else if (res.status === 402) {
           Swal.fire({
-            icon: "warning",
+            icon: "error",
             title: "",
-            text: res.data.warning,
+            text: res.data.error,
           });
         }
       })
@@ -180,10 +198,10 @@ function UpdateStudent() {
                 className="form-control form-sm-control border-info"
                 id="floatingInputInvalid"
                 placeholder=" "
-                name="stud_father_name"
-                {...register("stud_father_name", { required: true })}
+                name="father_name"
+                {...register("father_name", { required: true })}
               />
-              {errors.stud_father_name && (
+              {errors.father_name && (
                 <span className="text-danger float-start small">
                   This field is required
                 </span>
@@ -198,10 +216,10 @@ function UpdateStudent() {
                 className="form-control form-sm-control border-info"
                 id="floatingInputInvalid"
                 placeholder=" "
-                name="stud_mother_name"
-                {...register("stud_mother_name", { required: true })}
+                name="mother_name"
+                {...register("mother_name", { required: true })}
               />
-              {errors.stud_mother_name && (
+              {errors.mother_name && (
                 <span className="text-danger float-start small">
                   This field is required
                 </span>
@@ -218,10 +236,10 @@ function UpdateStudent() {
                 className="form-control form-sm-control border-info"
                 id="floatingInputInvalid"
                 placeholder=" "
-                name="stud_address"
-                {...register("stud_address", { required: true })}
+                name="address"
+                {...register("address", { required: true })}
               />
-              {errors.stud_address && (
+              {errors.address && (
                 <span className="text-danger float-start small">
                   This field is required
                 </span>
@@ -242,9 +260,6 @@ function UpdateStudent() {
                     This field is required
                   </span>
                 )}
-                {/* <option  disabled>
-            select Gender
-          </option> */}
                 <option defaultValue="male">male</option>
                 <option defaultValue="female">female</option>
                 <option defaultValue="other">other</option>

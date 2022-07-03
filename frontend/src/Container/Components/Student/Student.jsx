@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { http } from "../../../CommonApi/http";
+import { NavLink } from "react-router-dom";
 function Student() {
   const [students, setstudents] = useState([]);
   const [teachers, setTeachers] = useState([]);
@@ -20,7 +21,7 @@ function Student() {
     setShowData(dataIs[0]);
   }
   function handleTeachers(id) {
-    let studData = students.filter((data) => data.stud_id == id);
+    let studData = students.filter((data) => data.stud_id === id);
     setTeachers(studData[0].teachers);
   }
   let html = "",
@@ -33,16 +34,50 @@ function Student() {
           <td>{data.stud_name}</td>
           <td>{data.stud_ph_no}</td>
           <td>
-            <button
-              type="button"
-              className="btn btn-sm btn-info m-0 p-1"
-              data-bs-toggle="modal"
-              data-bs-target="#exampleModal1"
-              onClick={() => handleShow(data.stud_id)}
-            >
-              Details
-            </button>
-          </td>{" "}
+            <div className="input-group">
+              <button
+                className="btn-sm btn-secondary dropdown-toggle"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Actions
+              </button>
+              <ul className="dropdown-menu">
+                <li>
+                  <button
+                    type="button"
+                    className="btn btn-sm btn-info m-0 p-1"
+                    data-bs-toggle="modal"
+                    data-bs-target="#showStudents"
+                    onClick={() => handleShow(data.stud_id)}
+                  >
+                    View Details
+                  </button>
+                </li>
+                <li>
+                  <NavLink
+                    type="button"
+                    className="btn m-1 btn-warning"
+                    to={`updateStudent/${data.stud_id}`}
+                  >
+                    Update
+                  </NavLink>
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    className="btn m-1 btn-danger"
+                    data-bs-toggle="modal"
+                    data-bs-target="#exampleModal1"
+                    // onClick={() => handleDelete(data.teach_id)}
+                  >
+                    Details
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </td>
           <td>
             <button
               type="button"
@@ -105,10 +140,10 @@ function Student() {
           </table>
         </div>
       </div>
-      {/* <!-- Modal 1--> */}
+      {/* <!-- show students Modal 1--> */}
       <div
         className="modal fade"
-        id="exampleModal1"
+        id="showStudents"
         tabIndex="-1"
         aria-labelledby="exampleModalLabel"
         aria-hidden="true"
@@ -135,7 +170,10 @@ function Student() {
                         <pre>Student Name :</pre>
                         <pre>Student Email :</pre>
                         <pre>Student Phone No. :</pre>
+                        <pre>Father Name :</pre>
+                        <pre>Mother Name :</pre>
                         <pre>Class :</pre>
+                        <pre>Gender :</pre>
                         <pre>Student Address :</pre>
                         <pre>No of Teachers assigned :</pre>
                       </div>
@@ -143,7 +181,10 @@ function Student() {
                         <pre>{showData.stud_name}</pre>
                         <pre>{showData.stud_email}</pre>
                         <pre>{showData.stud_ph_no}</pre>
+                        <pre>{showData.father_name}</pre>
+                        <pre>{showData.mother_name}</pre>
                         <pre>{showData.stud_class}</pre>
+                        <pre>{showData.gender}</pre>
                         <pre>{showData.address}</pre>
                         <pre>{showData.teachers?.length}</pre>
                       </div>
@@ -155,7 +196,7 @@ function Student() {
           </div>
         </div>
       </div>
-      {/* model 2 */}
+      {/* show assigned teachers model model 2 */}
       <div
         className="modal fade"
         id="exampleModal2"

@@ -4,8 +4,12 @@ import { NavLink } from "react-router-dom";
 import { http } from "../../CommonApi/http";
 import Swal from "sweetalert2";
 
+import MultiSelect from "react-multiple-select-dropdown-lite";
+import "react-multiple-select-dropdown-lite/dist/index.css";
+
 function AddStudent() {
   const [teachers, setTeachers] = useState([]);
+  const [value, setvalue] = useState([]);
   useEffect(() => {
     const getTeacher = async () => {
       await http
@@ -21,7 +25,17 @@ function AddStudent() {
       getTeacher();
     };
   }, []);
-  // console.log(teachers);
+  // for multiple select options
+  const handleOnchange = (val) => {
+    // converting char to char array and then  to number array
+    setvalue(val.split(",").map(Number));
+  };
+  // console.log(value);
+  // destructring object and changing thier key names
+  const options = teachers.map(({ teach_id, teach_name }) => ({
+    label: teach_name,
+    value: teach_id,
+  }));
   const {
     register,
     handleSubmit,
@@ -29,7 +43,7 @@ function AddStudent() {
     formState: { errors },
   } = useForm();
   const onSubmit = async (data) => {
-    data = JSON.stringify({ ...data, prin_id: 1 });
+    data = JSON.stringify({ ...data, prin_id: 1, teach_id: value });
     console.log(data);
     // await http
     //   .post("storeStudent", data)
@@ -107,6 +121,11 @@ function AddStudent() {
                       name="stud_name"
                       {...register("stud_name", { required: true })}
                     />
+                    {errors.stud_name && (
+                      <span className="text-danger float-start small">
+                        This field is required
+                      </span>
+                    )}
                     <label htmlFor="floatingInputInvalid">
                       Enter Full Name
                     </label>
@@ -122,6 +141,11 @@ function AddStudent() {
                       name="stud_email"
                       {...register("stud_email", { required: true })}
                     />
+                    {errors.stud_email && (
+                      <span className="text-danger float-start small">
+                        This field is required
+                      </span>
+                    )}
                     <label htmlFor="floatingInputInvalid">Enter Email Id</label>
                   </div>
                 </div>
@@ -137,6 +161,11 @@ function AddStudent() {
                       name="stud_class"
                       {...register("stud_class", { required: true })}
                     />
+                    {errors.stud_class && (
+                      <span className="text-danger float-start small">
+                        This field is required
+                      </span>
+                    )}
                     <label htmlFor="floatingInputInvalid">Enter Class</label>
                   </div>
                 </div>
@@ -150,6 +179,11 @@ function AddStudent() {
                       name="stud_ph_no"
                       {...register("stud_ph_no", { required: true })}
                     />
+                    {errors.stud_ph_no && (
+                      <span className="text-danger float-start small">
+                        This field is required
+                      </span>
+                    )}
                     <label htmlFor="floatingInputInvalid">
                       Enter Contact Number
                     </label>
@@ -167,8 +201,13 @@ function AddStudent() {
                       name="stud_father_name"
                       {...register("stud_father_name", { required: true })}
                     />
+                    {errors.stud_father_name && (
+                      <span className="text-danger float-start small">
+                        This field is required
+                      </span>
+                    )}
                     <label htmlFor="floatingInputInvalid">
-                      Enter Father Number
+                      Enter Father Name
                     </label>
                   </div>
                 </div>
@@ -182,6 +221,11 @@ function AddStudent() {
                       name="stud_mother_name"
                       {...register("stud_mother_name", { required: true })}
                     />
+                    {errors.stud_mother_name && (
+                      <span className="text-danger float-start small">
+                        This field is required
+                      </span>
+                    )}
                     <label htmlFor="floatingInputInvalid">
                       Enter Mother Name
                     </label>
@@ -199,52 +243,44 @@ function AddStudent() {
                       name="stud_address"
                       {...register("stud_address", { required: true })}
                     />
+                    {errors.stud_address && (
+                      <span className="text-danger float-start small">
+                        This field is required
+                      </span>
+                    )}
                     <label htmlFor="floatingInputInvalid">
                       Enter Full Address
                     </label>
                   </div>
                 </div>
-                <div className="col-sm mb-1">
-                  <div className="form-floating">
-                    <select
-                      className="form-select form-sm-select border-info"
-                      id="floatingSelect"
-                      aria-label="Floating label select example"
-                      name="techers[]" multiple='multiple'
-                      {...register("teachers[]")}
-                    >
-                      {/* <option selected disabled>
-                        select Teacher
-                      </option> */}
-                      {teachers.map((data, i) => {
-                        return (
-                          <option value={data.teach_id} key={i}>
-                            {data.teach_name}
-                          </option>
-                        );
-                      })}
-                    </select>
-                    <label htmlFor="floatingSelect">Assign Teacher</label>
-                  </div>
-                </div>
-              </div>
-              <div className="row g-1">
                 <div className="col-sm">
                   <div className="form-floating mb-1 p-0">
                     <select
                       className="form-select border-primary"
                       id="floatingSelect"
+                      name="gender"
                       {...register("gender", { required: true })}
                     >
-                      <option selected disabled>
-                        select Gender
-                      </option>
-                      <option value="male">male</option>
-                      <option value="female">female</option>
-                      <option value="other">other</option>
+                      {errors.gender && (
+                        <span className="text-danger float-start small">
+                          This field is required
+                        </span>
+                      )}
+                      <option defaultValue="male">male</option>
+                      <option defaultValue="female">female</option>
+                      <option defaultValue="other">other</option>
                     </select>
                     <label htmlFor="floatingSelect">Select Gender</label>
                   </div>
+                </div>
+              </div>
+              <div className="row g-1">
+                <div className="col mb-1">
+                  <MultiSelect
+                    onChange={handleOnchange}
+                    options={options}
+                    className="form-control border-info "
+                  />
                 </div>
               </div>
               <div className="row g-1">
